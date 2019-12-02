@@ -10,11 +10,12 @@ mongoose.connect(url, function (err) {
         console.log("Successfuly connected to MongoDB");
     }
 });
-exports.UserSchema = new mongoose.Schema({
+exports.UsersSchema = new mongoose.Schema({
+    _id: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true }
 });
-var User = mongoose.model('User', exports.UserSchema);
-exports.default = User;
+var Users = mongoose.model('Users', exports.UsersSchema);
+exports.default = Users;

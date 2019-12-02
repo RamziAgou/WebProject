@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = __importDefault(require("./../user"));
 exports.allUsers = function (req, res) {
-    var users = user_1.default.find(function (err, users) {
+    var users = user_1.default.find({ "firstName": "Ramzi" }, function (err, users) {
         if (err) {
             res.send(err);
         }
         else {
+            console.log(users);
             res.send(users);
         }
     });
@@ -17,6 +18,7 @@ exports.allUsers = function (req, res) {
 exports.getUser = function (req, res) {
     user_1.default.findById(req.params.id, function (err, users) {
         if (err) {
+            console.log(err);
             res.send(err);
         }
         else {

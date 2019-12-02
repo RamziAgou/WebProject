@@ -1,6 +1,6 @@
 import express = require('express')
 import path = require('path')
-import bodyparser from 'body-parser'
+import * as bodyparser from 'body-parser'
 import * as UserController from './Controllers/userController'
 
 
@@ -20,6 +20,7 @@ app.get('/', (req: any, res: any) => {
 })
 
 app.get('/Users', UserController.allUsers);
+app.get('/Users/:id', UserController.getUser); 
 
 app.listen(port, (err: Error) => {
   if (err) {

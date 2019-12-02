@@ -1,8 +1,9 @@
 import {Request, Response} from 'express'
-import User from './../user'
+import Users from './../user'
+
 
 export let allUsers = ( req: Request, res: Response) => {
-    let users = User.find((err: any, users: any) => {
+    let users = Users.find({"firstName": "Ramzi"}, (err: any, users: any) => {
         if(err){
             res.send(err);
         }
@@ -14,8 +15,9 @@ export let allUsers = ( req: Request, res: Response) => {
 }
 
 export let getUser = ( req: Request, res: Response) => {
-    User.findById(req.params.id, (err: any, users: any) => {
+    Users.findById(req.params.id, (err: any, users: any) => {
         if(err){
+            console.log(err);
             res.send(err);
         }
         else{
@@ -25,7 +27,7 @@ export let getUser = ( req: Request, res: Response) => {
 }
 
 export let addUser = (req: Request, res: Response) => {
-    let user = new User(req.body);
+    let user = new Users(req.body);
 
     user.save((err: any) => {
         if(err){
@@ -38,7 +40,7 @@ export let addUser = (req: Request, res: Response) => {
 }
 
 export let deleteUser = (req: Request, res: Response) => {
-    User.deleteOne({ _id: req.params.id }, (err : any) => {
+    Users.deleteOne({ _id: req.params.id }, (err : any) => {
         if(err){
             res.send(err);
         }
@@ -49,7 +51,7 @@ export let deleteUser = (req: Request, res: Response) => {
 }
 
 export let updateUser = ( req: Request, res: Response) => {
-    User.findByIdAndUpdate(req.params.id, req.body, (err: any, users: any) => {
+    Users.findByIdAndUpdate(req.params.id, req.body, (err: any, users: any) => {
         if(err){
             res.send(err);
         }
