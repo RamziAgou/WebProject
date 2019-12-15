@@ -3,7 +3,7 @@ import Users from './../user'
 
 
 export let allUsers = ( req: Request, res: Response) => {
-    let users = Users.find({"firstName": "Ramzi"}, (err: any, users: any) => {
+    let users = Users.find((err: any, users: any) => {
         if(err){
             res.send(err);
         }
@@ -14,38 +14,41 @@ export let allUsers = ( req: Request, res: Response) => {
     })
 }
 
-export let getUser = ( req: Request, res: Response) => {
-    Users.findById(req.params.id, (err: any, users: any) => {
+export let getUserByMail = ( email : string , callback : (users : any) => void ) => {
+    Users.find({"email" : email}, (err: any, users: any) => {
         if(err){
-            console.log(err);
-            res.send(err);
+            return err;
         }
         else{
-            res.send(users);
+            callback(users);
         }
     })
 }
 
-export let addUser = (req: Request, res: Response) => {
+export let addUser = (req: Request, callback : (user : any) => void) => {
+    console.log("je rentre ici");
     let user = new Users(req.body);
 
+    console.log(user);
     user.save((err: any) => {
         if(err){
-            res.send(err);
+            console.log(err);
         }
         else{
-            res.send(user);
+            console.log("Successfuly added");
+            callback(user);
         }
     })
 }
 
-export let deleteUser = (req: Request, res: Response) => {
-    Users.deleteOne({ _id: req.params.id }, (err : any) => {
+export let deleteUser = (req: Request, callback : () => void ) => {
+    Users.deleteOne({ email: req.params.email }, (err : any) => {
         if(err){
-            res.send(err);
+            console.log(err);
         }
         else{
-            res.send("Successfully deleted");
+            console.log("User supprimé");
+            callback();
         }
     })
 }
