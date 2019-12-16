@@ -93,6 +93,7 @@ router.get('/logout', (req, res) => {
     });
 });
 
+<<<<<<< HEAD
 router.post('/:email', (req, res) => {
     
     sess = req.session;
@@ -118,6 +119,28 @@ router.post('/:email', (req, res) => {
         }
     })
     
+=======
+app.get('/', (req: any, res: any) => {
+  res.render("home.ejs");
+  
+})
+
+app.get('/login', (req: any, res: any) => {
+  res.render("login.ejs");
+  // res.send('login')
+})
+
+app.get('/register', (req: any, res: any) => {
+  res.render("register.ejs");
+  //res.send('register')
+})
+
+app.post('/register', (req: any, res: any) => {
+
+  console.log(req.body)
+  res.send("hello");
+  //res.send('register')
+>>>>>>> 05f3faf4a37124f5dee6e13b5626315a8e10ad69
 })
 
 router.delete('/:email', (req, res) => {
