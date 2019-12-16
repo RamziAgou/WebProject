@@ -53,13 +53,29 @@ export let deleteUser = (req: Request, callback : () => void ) => {
     })
 }
 
-export let updateUser = ( req: Request, res: Response) => {
-    Users.findByIdAndUpdate(req.params.id, req.body, (err: any, users: any) => {
+export let update = ( req: Request, callback : (affected) => void) => {
+    Users.updateOne( { email : req.params.email }, {
+        username : req.body.username,
+        email : req.body.email,
+        password : req.body.password
+    }, (err, affected, resp) => {
         if(err){
-            res.send(err);
+            console.log(err)
         }
         else{
-            res.send("Successfully updated user");
+            callback(affected)
+        }
+    })
+}
+
+export let updateUser = ( req: Request, callback : () => void) => {
+    Users.findByIdAndUpdate(req.params.email, req.body, (err: any, users: any) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log(users);
+            console.log("Successfully updated user");
         }
     })
 }

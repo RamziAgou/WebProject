@@ -30,7 +30,6 @@ routerAuth.use(authCheck);
 
 router.get('/', (req, res) => {
     sess = req.session;
-    console.log(sess);
     if (sess.email) {
         return res.redirect('Users/' + sess.email);
     }
@@ -92,8 +91,34 @@ router.get('/logout', (req, res) => {
         }
         res.redirect('/');
     });
-
 });
+
+router.post('/:email', (req, res) => {
+    
+    sess = req.session;
+    
+    UserController.update(req, (affected) => {
+        if(affected.n == 0){
+            console.log("There is no user who match this email sorry");
+        }
+        else{
+            if(affected.nModified == 0){
+                console.log("Sorry there is an issue with the modification");
+            }
+            else{
+                console.log("Modification Done");
+                if(sess.email === req.params.email){
+                    sess.email = req.body.email;
+                    res.redirect('Users/' + sess.email);
+                }
+                else{
+                    res.redirect('/');
+                }
+            }
+        }
+    })
+    
+})
 
 router.delete('/:email', (req, res) => {
 
