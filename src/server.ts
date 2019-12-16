@@ -30,12 +30,20 @@ app.get('/register', (req: any, res: any) => {
   //res.send('register')
 })
 
+app.get('/dashboard', (req: any, res: any) => {
+  res.render("dashboard.ejs");
+  //res.render("hello.ejs");
+  //res.send("hello");
+})
+
 app.post('/register', (req: any, res: any) => {
 
   console.log(req.body)
   res.send("hello");
   //res.send('register')
 })
+
+
 
 app.listen(port, (err: Error) => {
   if (err) {
