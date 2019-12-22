@@ -3,13 +3,31 @@
 
 <head>
     <% include partials/head %>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="/">Home</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/"><%= users.email %></a>
+                <a class="nav-item nav-link " href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
 </head>
 
 <body class="container">
 
     <h1 class="mt-4">User page</h1>
-    <p class="lead mb-3">Welcome <%= Username %></p>
+    <p class="lead mb-3">Welcome <%= users.username %></p>
+
+    <a href="/updateProfile" class="btn btn-primary" >Update Profile</a>
+
     <a href="/logout" class="btn btn-secondary">Logout</a>
+
+
+
+
 
 
 </body>
