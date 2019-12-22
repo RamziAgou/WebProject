@@ -38,7 +38,13 @@ router.get('/', (req, res) => {
 
 router.get('/updateProfile', (req, res) => {
 
-    res.render("updateProfile.ejs");
+    sess = req.session
+
+    console.log("User Modif : "+ sess.email)
+
+    res.render("updateProfile.ejs", {
+        email: sess.email
+    });
 });
 
 
