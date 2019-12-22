@@ -158,8 +158,20 @@ router.post('/register', (req, res) => {
 })
 
 
-router.post('/updateProfile', (req, res) => {
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return console.log(err);
+        }
+        res.redirect('/');
+    });
+});
 
+router.post('/:email', (req, res) => {
+
+    sess = req.session;
+
+    //error handler
     const { username, email, password, password2 } = req.body;
     let errors = [] as any;
 
@@ -184,24 +196,13 @@ router.post('/updateProfile', (req, res) => {
             password2
         });
     }
-
+    
     else {
 
-        UserController.getUserByMail(req.body.email, (users) => {
-            if (users == '') {
-                // console.log(req.body);
-                // UserController.updateUser(req, (user) => {
-                //     console.log("je rentre la");
-                //     sess = req.session;
-                //     sess.email = user.email;
-                //     res.redirect('Users/' + sess.email);
-                // });
-
-                //Faire Update du profile
-            }
-            else {
-                // console.log("Cette adresse mail est déjà utilisée");
-                errors.push({ msg: 'Email already exists' });
+        UserController.update(req, (affected) => {
+            if (affected.n == 0) {
+                // console.log("There is no user who match this email sorry");
+                errors.push({ msg: 'There is no user who match this email sorry' });
                 res.render('updateProfile', {
                     errors,
                     username,
@@ -210,51 +211,42 @@ router.post('/updateProfile', (req, res) => {
                     password2
                 });
             }
-        });
+            else {
+                if (affected.nModified == 0) {
+                    // console.log("Sorry there is an issue with the modification");
+                    errors.push({ msg: 'Sorry there is an issue with the modification' });
+                    res.render('updateProfile', {
+                        errors,
+                        username,
+                        email,
+                        password,
+                        password2
+                    });
+                }
+                else {
+                    console.log("Modification Done");
+                    if (sess.email === req.params.email) {
+                        sess.email = req.body.email;
+                        res.redirect('Users/' + sess.email);
+                    }
+                    else {
+                        res.redirect('/');
+                    }
+                }
+            }
+        })
 
     }
 })
 
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return console.log(err);
-        }
-        res.redirect('/');
-    });
-});
-
-router.post('/:email', (req, res) => {
-
-    sess = req.session;
-
-    UserController.update(req, (affected) => {
-        if (affected.n == 0) {
-            console.log("There is no user who match this email sorry");
-        }
-        else {
-            if (affected.nModified == 0) {
-                console.log("Sorry there is an issue with the modification");
-            }
-            else {
-                console.log("Modification Done");
-                if (sess.email === req.params.email) {
-                    sess.email = req.body.email;
-                    res.redirect('Users/' + sess.email);
-                }
-                else {
-                    res.redirect('/');
-                }
-            }
-        }
-    })
-})
-
+// prbm redirect après delete
 router.delete('/:email', (req, res) => {
 
     sess = req.session;
 
     UserController.getUserByMail(req.params.email, (users) => {
+
+        console.log("je suis ici")
         if (users == '') {
             res.send("This email is not assigned to any users, sorry");
         }
@@ -265,11 +257,13 @@ router.delete('/:email', (req, res) => {
                         if (err) {
                             return console.log(err);
                         }
-                        res.send("You deleted yourself, you'll now get logout")
+                        // res.send("You deleted yourself, you'll now get logout")
+                        res.redirect('/logout');
                     });
                 }
                 else {
-                    res.send(req.params.email + " get deleted successfully");
+                    // res.send(req.params.email + " get deleted successfully");
+                    res.redirect('/');
                 }
             })
         }
@@ -285,15 +279,19 @@ routerAuth.get('/:email', (req, res) => {
 
     UserController.getUserByMail(req.params.email, (users) => {
 
+
+
         if (users == '') {
             console.log("Pas trouvé");
         }
         else {
             console.log("Users : " + users);
+            console.log("username : " + users[0].username);
+
             //res.send(users);
 
             res.render("dashboard.ejs", {
-                users: users
+                user: users[0]
             })
         }
     });

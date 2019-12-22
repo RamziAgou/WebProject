@@ -8,26 +8,53 @@
         <a class="navbar-brand" href="/">Home</a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/"><%= users.email %></a>
+                <a class="nav-item nav-link" href="/"><%= user.email %></a>
                 <a class="nav-item nav-link " href="/logout">Logout</a>
             </div>
         </div>
     </nav>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#delete').on('click', function () {
+
+                $.ajax({
+                    type: "DELETE",
+                    url: '/alexandre.avakian@edu.ece.fr',
+                }).done(function (msg) {
+                    alert('Your profile is now deleted, you can refreash the page to be redirected to the loging page');
+                });
+
+                //here would be the code to send the DELETE request 
+            });
+        });
+
+
+    </script>
 
 </head>
 
 <body class="container">
 
     <h1 class="mt-4">User page</h1>
-    <p class="lead mb-3">Welcome <%= users.username %></p>
+    <p class="lead mb-3">Welcome <%= user.username %></p>
 
-    <a href="/updateProfile" class="btn btn-primary" >Update Profile</a>
+    <a href="/updateProfile" class="btn btn-primary">Update Profile</a>
 
-    <a href="/logout" class="btn btn-secondary">Logout</a>
+    <!-- Mettre affichage metrics -->
+    <br><br><br><br>
+    <div>
 
+        <div class="text-right">
 
+            <!-- <a href="/logout" class="btn btn-secondary text-left">Logout</a> -->
 
+            <!-- change href -->
+            <a class="btn btn-danger" id="delete">Delete your profile</a>
 
+        </div>
+    </div>
 
 
 </body>
