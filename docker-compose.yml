@@ -1,0 +1,16 @@
+version: '3'
+services: 
+  app: 
+    container_name: WebProjet
+    restart: always
+    build: .
+    ports: 
+      - '192.168.99.100:8080:8080'
+      - '127.0.0.1:8080:8080'
+    links: 
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports: 
+      - '27017:27017'

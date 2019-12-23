@@ -25,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(session({ secret: 'ssshhhhh', saveUninitialized: true, resave: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '/public'));
 routerAuth.use(authCheck);
 
 router.get('/', (req, res) => {
@@ -72,7 +72,6 @@ router.post('/register', (req, res) => {
         if (users == '') {
             console.log(req.body);
             UserController.addUser(req, (user) => {
-                console.log("je rentre la");
                 sess = req.session;
                 sess.email = user.email;
                 res.redirect('Users/' + sess.email);

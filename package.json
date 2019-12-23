@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
+    "production": "docker-compose -f docker/docker-compose.yml up -d",
     "start": "./node_modules/.bin/ts-node src/server.ts",
     "dev": "./node_modules/.bin/nodemon "
   },
@@ -30,6 +31,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "ejs": "^2.7.4",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
