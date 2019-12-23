@@ -36,24 +36,67 @@ router.get('/', (req, res) => {
     res.render("login.ejs");
 });
 
+router.get('/updateProfile', (req, res) => {
+
+    sess = req.session
+
+    console.log("User Modif : "+ sess.email)
+
+    res.render("updateProfile.ejs", {
+        email: sess.email
+    });
+});
+
+
 router.post('/login', (req, res) => {
 
-    UserController.getUserByMail(req.body.email, (users) => {
-        if (users == '') {
-            console.log("Cette adresse mail n'existe pas");
-        }
-        else {
-            console.log("users.password :" + users[0].password + " req.body.password:" + req.body.password);
-            if (users[0].password === req.body.password) {
-                sess = req.session;
-                sess.email = req.body.email;
-                res.redirect('Users/' + sess.email);
+    const { email, password } = req.body;
+    let errors = [] as any;
+
+    if (!email || !password) {
+        errors.push({ msg: "Please enter all fields" });
+    }
+
+    if (errors.length > 0) {
+        res.render('login', {
+            errors,
+            email,
+            password,
+        });
+    }
+
+    else {
+
+        UserController.getUserByMail(req.body.email, (users) => {
+            if (users == '') {
+                // console.log("Cette adresse mail n'existe pas");
+                errors.push({ msg: 'Email does not exist' });
+                res.render('login', {
+                    errors,
+                    email,
+                    password,
+                });
             }
             else {
-                console.log("Mot de passe incorrect");
+                console.log("users.password :" + users[0].password + " req.body.password:" + req.body.password);
+                if (users[0].password === req.body.password) {
+                    sess = req.session;
+                    sess.email = req.body.email;
+                    res.redirect('Users/' + sess.email);
+                }
+                else {
+                    // console.log("Mot de passe incorrect");
+                    errors.push({ msg: 'Wrong password' });
+                    res.render('login', {
+                        errors,
+                        email,
+                        password,
+                    });
+                }
             }
-        }
-    });
+        });
+
+    }
 });
 
 router.get('/register', (req, res) => {
@@ -67,21 +110,59 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
 
+    const { username, email, password, password2 } = req.body;
+    let errors = [] as any;
 
-    UserController.getUserByMail(req.body.email, (users) => {
-        if (users == '') {
-            console.log(req.body);
-            UserController.addUser(req, (user) => {
-                sess = req.session;
-                sess.email = user.email;
-                res.redirect('Users/' + sess.email);
-            });
-        }
-        else {
-            console.log("Cette adresse mail est déjà utilisée");
-        }
-    });
+    if (!username || !email || !password || !password2) {
+        errors.push({ msg: "Please enter all fields" });
+    }
+
+    if (password != password2) {
+        errors.push({ msg: 'Passwords do not match' });
+    }
+
+    if (password.length < 6) {
+        errors.push({ msg: 'Password must be at least 6 characters' });
+    }
+
+    if (errors.length > 0) {
+        res.render('register', {
+            errors,
+            username,
+            email,
+            password,
+            password2
+        });
+    }
+
+    else {
+
+        UserController.getUserByMail(req.body.email, (users) => {
+            if (users == '') {
+                console.log(req.body);
+                UserController.addUser(req, (user) => {
+                    console.log("je rentre la");
+                    sess = req.session;
+                    sess.email = user.email;
+                    res.redirect('Users/' + sess.email);
+                });
+            }
+            else {
+                // console.log("Cette adresse mail est déjà utilisée");
+                errors.push({ msg: 'Email already exists' });
+                res.render('register', {
+                    errors,
+                    username,
+                    email,
+                    password,
+                    password2
+                });
+            }
+        });
+
+    }
 })
+
 
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -93,36 +174,85 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/:email', (req, res) => {
-    
+
     sess = req.session;
+
+    //error handler
+    const { username, email, password, password2 } = req.body;
+    let errors = [] as any;
+
+    if (!username || !email || !password || !password2) {
+        errors.push({ msg: "Please enter all fields" });
+    }
+
+    if (password != password2) {
+        errors.push({ msg: 'Passwords do not match' });
+    }
+
+    if (password.length < 6) {
+        errors.push({ msg: 'Password must be at least 6 characters' });
+    }
+
+    if (errors.length > 0) {
+        res.render('updateProfile', {
+            errors,
+            username,
+            email,
+            password,
+            password2
+        });
+    }
     
-    UserController.update(req, (affected) => {
-        if(affected.n == 0){
-            console.log("There is no user who match this email sorry");
-        }
-        else{
-            if(affected.nModified == 0){
-                console.log("Sorry there is an issue with the modification");
+    else {
+
+        UserController.update(req, (affected) => {
+            if (affected.n == 0) {
+                // console.log("There is no user who match this email sorry");
+                errors.push({ msg: 'There is no user who match this email sorry' });
+                res.render('updateProfile', {
+                    errors,
+                    username,
+                    email,
+                    password,
+                    password2
+                });
             }
-            else{
-                console.log("Modification Done");
-                if(sess.email === req.params.email){
-                    sess.email = req.body.email;
-                    res.redirect('Users/' + sess.email);
+            else {
+                if (affected.nModified == 0) {
+                    // console.log("Sorry there is an issue with the modification");
+                    errors.push({ msg: 'Sorry there is an issue with the modification' });
+                    res.render('updateProfile', {
+                        errors,
+                        username,
+                        email,
+                        password,
+                        password2
+                    });
                 }
-                else{
-                    res.redirect('/');
+                else {
+                    console.log("Modification Done");
+                    if (sess.email === req.params.email) {
+                        sess.email = req.body.email;
+                        res.redirect('Users/' + sess.email);
+                    }
+                    else {
+                        res.redirect('/');
+                    }
                 }
             }
-        }
-    })
+        })
+
+    }
 })
 
+// prbm redirect après delete
 router.delete('/:email', (req, res) => {
 
     sess = req.session;
 
     UserController.getUserByMail(req.params.email, (users) => {
+
+        console.log("je suis ici")
         if (users == '') {
             res.send("This email is not assigned to any users, sorry");
         }
@@ -133,11 +263,13 @@ router.delete('/:email', (req, res) => {
                         if (err) {
                             return console.log(err);
                         }
-                        res.send("You deleted yourself, you'll now get logout")
+                        // res.send("You deleted yourself, you'll now get logout")
+                        res.redirect('/logout');
                     });
                 }
                 else {
-                    res.send(req.params.email + " get deleted successfully");
+                    // res.send(req.params.email + " get deleted successfully");
+                    res.redirect('/');
                 }
             })
         }
@@ -152,12 +284,21 @@ routerAuth.get('/', UserController.allUsers);
 routerAuth.get('/:email', (req, res) => {
 
     UserController.getUserByMail(req.params.email, (users) => {
+
+
+
         if (users == '') {
             console.log("Pas trouvé");
         }
         else {
             console.log("Users : " + users);
-            res.send(users);
+            console.log("username : " + users[0].username);
+
+            //res.send(users);
+
+            res.render("dashboard.ejs", {
+                user: users[0]
+            })
         }
     });
 
