@@ -21,7 +21,7 @@
 
                 $.ajax({
                     type: "DELETE",
-                    url: '/alexandre.avakian@edu.ece.fr',
+                    url: '<%= user.email %>',
                 }).done(function (msg) {
                     alert('Your profile is now deleted, you can refreash the page to be redirected to the login page');
                 });
