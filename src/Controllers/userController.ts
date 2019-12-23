@@ -68,6 +68,22 @@ export let update = ( req: Request, callback : (affected) => void) => {
     })
 }
 
+export let newMetrics = ( user_email : string, req : Request, callback : (success) => void ) => {
+    
+    Users.findOneAndUpdate(
+        { email : user_email},
+        { $push : { metrics : req.body } },
+        (error, success) => {
+            if(error){
+                console.log(error)
+            }
+            else{
+                callback(success)  
+            }
+        }
+    )
+}
+
 export let updateUser = ( req: Request, callback : () => void) => {
     Users.findByIdAndUpdate(req.params.email, req.body, (err: any, users: any) => {
         if(err){

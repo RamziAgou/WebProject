@@ -50,6 +50,7 @@ router.get('/updateProfile', (req, res) => {
 
 router.post('/login', (req, res) => {
 
+    console.log("je rentre ici");
     const { email, password } = req.body;
     let errors = [] as any;
 
@@ -58,18 +59,18 @@ router.post('/login', (req, res) => {
     }
 
     if (errors.length > 0) {
+        
         res.render('login', {
             errors,
             email,
             password,
         });
     }
-
     else {
-
+        
         UserController.getUserByMail(req.body.email, (users) => {
             if (users == '') {
-                // console.log("Cette adresse mail n'existe pas");
+                console.log("Cette adresse mail n'existe pas");
                 errors.push({ msg: 'Email does not exist' });
                 res.render('login', {
                     errors,
@@ -85,7 +86,7 @@ router.post('/login', (req, res) => {
                     res.redirect('Users/' + sess.email);
                 }
                 else {
-                    // console.log("Mot de passe incorrect");
+                    console.log("Mot de passe incorrect");
                     errors.push({ msg: 'Wrong password' });
                     res.render('login', {
                         errors,
@@ -95,7 +96,6 @@ router.post('/login', (req, res) => {
                 }
             }
         });
-
     }
 });
 
@@ -252,7 +252,6 @@ router.delete('/:email', (req, res) => {
 
     UserController.getUserByMail(req.params.email, (users) => {
 
-        console.log("je suis ici")
         if (users == '') {
             res.send("This email is not assigned to any users, sorry");
         }
@@ -279,6 +278,17 @@ router.delete('/:email', (req, res) => {
 
 //Here we are getting /Users, because of the app.use at the end of the code
 routerAuth.get('/', UserController.allUsers);
+
+routerAuth.post('/metrics', (req, res) => {
+
+    sess = req.session;
+    req.body.type = "user"
+    req.body.timestamp = new Date().toDateString()
+
+    UserController.newMetrics(sess.email, req, (success) => {
+        console.log(success)
+    })
+})
 
 //Here we are getting /Users/:email because of the app.use at the end of the code
 routerAuth.get('/:email', (req, res) => {
