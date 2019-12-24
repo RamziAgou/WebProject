@@ -4,7 +4,7 @@ import Users from '../user'
 
 const mongoose = require('mongoose');
 
-const url : string = 'mongodb://localhost:27017/WebProjetTest';
+const url : string = 'mongodb://mongo:27017/WebProjetTest';
 
 //tell mongoose to use es6 implementation of promises
 mongoose.Promise = global.Promise;
