@@ -3,18 +3,24 @@
 
 <head>
   <% include partials/head %>
+
   <% var connected = 0 %>
 
   <% include partials/navBar %>
+
 </head>
 
-<body class="container">
-  <div class="row mt-5">
-    <div class="col-md-6 m-auto">
-      <div class="card card-body text-center">
-        <p>Create an account or login</p>
-        <a href="/register" class="btn btn-primary btn-block mb-2">Register</a>
-        <a href="/login" class="btn btn-secondary btn-block">Login</a>
+<body>
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6 m-auto">
+        <h1 class="text-center">Welcome to our website</h1>
+        <br><br><br>
+        <div class="card card-body text-center">
+          <p>Create an account or login</p>
+          <a href="/register" class="btn btn-primary btn-block mb-2">Register</a>
+          <a href="/" class="btn btn-secondary btn-block">Login</a>
+        </div>
       </div>
     </div>
   </div>
