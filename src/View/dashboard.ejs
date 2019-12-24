@@ -31,7 +31,7 @@
         }
 
         //I really don't know why VSCode still saying that it's an error...
-        var usertp = JSON.stringify(user)
+        var usertp = <%- JSON.stringify(user) %>
         $(document).ready(function () {
             $('#delete').on('click', function () {
 
