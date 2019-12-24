@@ -4,11 +4,11 @@ import Users from '../user'
 
 const mongoose = require('mongoose');
 
-const url : string = 'mongodb://127.0.0.1:27017/WebProjectTest';
+const url : string = 'mongodb://localhost:27017/WebProjectTest';
 
 //tell mongoose to use es6 implementation of promises
 mongoose.Promise = global.Promise;
-
+mongoose.set('useNewUrlParser', true);
 
 mongoose.connect('url'); 
 mongoose.connection
