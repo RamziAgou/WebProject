@@ -85,7 +85,7 @@ router.post('/login', (req, res) => {
                         type : "con",
                         timestamp : new Date().toUTCString()
                     }
-                    UserController.newMetrics(sess.email, metric, (success) => {
+                    UserController.newMetrics(sess.email, metric, res, () => {
                         //console.log(success);
                     })
                     res.redirect('Users/' + sess.email);
@@ -285,9 +285,24 @@ routerAuth.delete('/metrics/:id', (req, res) => {
     sess=req.session;
     console.log(req.params.id)
 
-    UserController.deleteMetric(sess.email, req.params.id, () => {
-        
+    UserController.deleteMetric(sess.email, req.params.id, res, () => {
+        //res.redirect(sess.email);
     });
+})
+
+routerAuth.post('/metrics/:id', (req, res) => {
+
+    sess = req.session;
+
+    console.log(req.params.id);
+    console.log(req.body)
+
+    req.body.id = req.params.id
+
+    UserController.updateMetrics(sess.email, req.body, () => {
+        res.redirect('../')
+    })
+
 })
 
 routerAuth.post('/metrics', (req, res) => {
@@ -299,8 +314,8 @@ routerAuth.post('/metrics', (req, res) => {
 
     UserController.findMetric(sess.email, req.body.id, () => {
 
-        UserController.newMetrics(sess.email, req.body, (success) => {
-
+        UserController.newMetrics(sess.email, req.body, res, () => {
+            res.redirect(sess.email);
         })
     })
     

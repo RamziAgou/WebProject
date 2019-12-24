@@ -37,25 +37,47 @@ export let findMetric = ( user_email : string, idMetric : string, callback : () 
     })
 }
 
-export let deleteMetric = ( user_email : string, idMetric : string, callback : () => void) => {
+export let updateMetrics = ( user_email : string, body : any, callback : () => void ) => {
+
+    Users.findOneAndUpdate(
+        { email : user_email, 'metrics.id' : body.id},
+        { $set : { 'metrics.$.value' : body.value}},
+        (error, success) => {
+            if(error){
+                console.log(error)
+            }
+            else{
+                callback()
+            }
+        }
+    )
+}
+
+export let newMetrics = ( user_email : string, body : any, res : Response, callback : () => void ) => {
+    
+    console.log(body)
+    Users.findOneAndUpdate(
+        { email : user_email},
+        { $push : { metrics : body } },
+        (error, success) => {
+            if(error){
+                console.log(error)
+            }
+            else{
+                callback()
+            }
+        }
+    )
+}
+
+export let deleteMetric = ( user_email : string, idMetric : string, res: Response, callback : () => void) => {
     Users.findOneAndUpdate( 
         { email : user_email}, 
         { $pull : { metrics : { id : idMetric, type : 'user' } } },
         { new : true},
-        function(err, val){
-            console.log(val)
-        }
-        );
-
-    /*Users.findOneAndUpdate( 
-        { email : user_email }, 
-        { $pull : { 'metrics.id' : idMetric } },
-        function(err, val){
-            console.log(val)
-        }
-        )*/
-
-    //console.log(user);
+        ).exec( (err, doc) => {
+            res.end()
+        })
 }
 
 export let addUser = (req: Request, callback : (user : any) => void) => {
@@ -95,22 +117,6 @@ export let update = ( req: Request, callback : (affected) => void) => {
             callback(affected)
         }
     })
-}
-
-export let newMetrics = ( user_email : string, body : any, callback : (success) => void ) => {
-    
-    Users.findOneAndUpdate(
-        { email : user_email},
-        { $push : { metrics : body } },
-        (error, success) => {
-            if(error){
-                console.log(error)
-            }
-            else{
-                callback(success)  
-            }
-        }
-    )
 }
 
 export let updateUser = ( req: Request, callback : () => void) => {
