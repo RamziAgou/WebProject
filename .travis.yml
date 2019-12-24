@@ -3,9 +3,8 @@ node_js:
   - v12.13.1
 services: 
   - mongodb
+  - xvfb
 install : 
   - npm install
 script : 
   - npm run test
-services:
-  -xvfb
