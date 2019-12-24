@@ -1,5 +1,6 @@
 import {Request, Response} from 'express'
 import Users from './../user'
+import { doesNotReject } from 'assert';
 
 
 export let allUsers = ( req: Request, res: Response) => {
@@ -8,7 +9,6 @@ export let allUsers = ( req: Request, res: Response) => {
             res.send(err);
         }
         else{
-            console.log(users);
             res.send(users);
         }
     })
@@ -25,17 +25,47 @@ export let getUserByMail = ( email : string , callback : (users : any) => void )
     })
 }
 
+export let findMetric = ( user_email : string, idMetric : string, callback : () => void) => {
+
+    var user = Users.find({ email : user_email }).where('metrics', { $elemMatch: { id : idMetric, type : 'user'} }).exec( (err, doc) => {
+        if(!(Array.isArray(doc) && doc.length)){
+            callback()
+        }
+        else{
+            console.log("This metric's id is already used")
+        }
+    })
+}
+
+export let deleteMetric = ( user_email : string, idMetric : string, callback : () => void) => {
+    Users.findOneAndUpdate( 
+        { email : user_email}, 
+        { $pull : { metrics : { id : idMetric, type : 'user' } } },
+        { new : true},
+        function(err, val){
+            console.log(val)
+        }
+        );
+
+    /*Users.findOneAndUpdate( 
+        { email : user_email }, 
+        { $pull : { 'metrics.id' : idMetric } },
+        function(err, val){
+            console.log(val)
+        }
+        )*/
+
+    //console.log(user);
+}
+
 export let addUser = (req: Request, callback : (user : any) => void) => {
-    console.log("je rentre ici");
     let user = new Users(req.body);
 
-    console.log(user);
     user.save((err: any) => {
         if(err){
             console.log(err);
         }
         else{
-            console.log("Successfuly added");
             callback(user);
         }
     })
@@ -47,7 +77,6 @@ export let deleteUser = (req: Request, callback : () => void ) => {
             console.log(err);
         }
         else{
-            console.log("User supprimé");
             callback();
         }
     })
@@ -68,11 +97,11 @@ export let update = ( req: Request, callback : (affected) => void) => {
     })
 }
 
-export let newMetrics = ( user_email : string, req : Request, callback : (success) => void ) => {
+export let newMetrics = ( user_email : string, body : any, callback : (success) => void ) => {
     
     Users.findOneAndUpdate(
         { email : user_email},
-        { $push : { metrics : req.body } },
+        { $push : { metrics : body } },
         (error, success) => {
             if(error){
                 console.log(error)
@@ -90,8 +119,7 @@ export let updateUser = ( req: Request, callback : () => void) => {
             console.log(err);
         }
         else{
-            console.log(users);
-            console.log("Successfully updated user");
+
         }
     })
 }

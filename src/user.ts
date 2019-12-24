@@ -13,6 +13,8 @@ mongoose.connect(url, (err : any) => {
     }
 })
 
+mongoose.set('debug', true)
+
 
 
 export const UsersSchema = new mongoose.Schema({

@@ -14,16 +14,31 @@
         </div>
     </nav>
 
-
     <script>
+
+        function onClick(){
+            var selectBox = document.getElementById("metrics");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            alert(selectedValue);
+
+            $.ajax({
+                    type: "DELETE",
+                    url: '/Users/metrics/'+selectedValue ,
+                }).done(function (msg) {
+                    //document.location.reload(true)
+                });
+        }
+
+        //I really don't know why VSCode still saying that it's an error...
+        var usertp = <%-JSON.stringify(user)%>;
         $(document).ready(function () {
             $('#delete').on('click', function () {
 
                 $.ajax({
                     type: "DELETE",
-                    url: '/alexandre.avakian@edu.ece.fr',
+                    url: '/'+usertp.email ,
                 }).done(function (msg) {
-                    alert('Your profile is now deleted, you can refreash the page to be redirected to the login page');
+                    document.location.reload(true)
                 });
 
                 //here would be the code to send the DELETE request 
@@ -67,6 +82,16 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">New Metric</button>
       </form>
+
+      <br>
+      <select id="metrics">
+        <% for(var i = 0; i < user.metrics.length; i++) { %>
+            <% if(user.metrics[i].type == "user") { %>
+          <option value=<%= user.metrics[i].id %>><%= user.metrics[i].id %></option>
+            <%}%>
+        <% } %>
+      </select>
+      <button class="btn btn-primary" onclick="onClick()">Delete the metric</button>
 
 
 </body>

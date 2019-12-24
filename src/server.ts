@@ -11,7 +11,6 @@ var sess; //I know this is not really recommanded to set a global session like t
 const authCheck = function (req: any, res: any, next: any) {
     sess = req.session;
     if (sess.email) {
-        console.log("je rentre la");
         next()
     }
     else {
@@ -40,7 +39,6 @@ router.get('/updateProfile', (req, res) => {
 
     sess = req.session
 
-    console.log("User Modif : "+ sess.email)
 
     res.render("updateProfile.ejs", {
         email: sess.email
@@ -50,7 +48,6 @@ router.get('/updateProfile', (req, res) => {
 
 router.post('/login', (req, res) => {
 
-    console.log("je rentre ici");
     const { email, password } = req.body;
     let errors = [] as any;
 
@@ -70,7 +67,6 @@ router.post('/login', (req, res) => {
         
         UserController.getUserByMail(req.body.email, (users) => {
             if (users == '') {
-                console.log("Cette adresse mail n'existe pas");
                 errors.push({ msg: 'Email does not exist' });
                 res.render('login', {
                     errors,
@@ -79,10 +75,19 @@ router.post('/login', (req, res) => {
                 });
             }
             else {
-                console.log("users.password :" + users[0].password + " req.body.password:" + req.body.password);
                 if (users[0].password === req.body.password) {
                     sess = req.session;
                     sess.email = req.body.email;
+
+                    var metric = { 
+                        id : "connection",
+                        value : 1,
+                        type : "con",
+                        timestamp : new Date().toUTCString()
+                    }
+                    UserController.newMetrics(sess.email, metric, (success) => {
+                        //console.log(success);
+                    })
                     res.redirect('Users/' + sess.email);
                 }
                 else {
@@ -139,16 +144,14 @@ router.post('/register', (req, res) => {
 
         UserController.getUserByMail(req.body.email, (users) => {
             if (users == '') {
-                console.log(req.body);
+                req.body.metrics = []
                 UserController.addUser(req, (user) => {
-                    console.log("je rentre la");
                     sess = req.session;
                     sess.email = user.email;
                     res.redirect('Users/' + sess.email);
                 });
             }
             else {
-                // console.log("Cette adresse mail est déjà utilisée");
                 errors.push({ msg: 'Email already exists' });
                 res.render('register', {
                     errors,
@@ -207,7 +210,6 @@ router.post('/:email', (req, res) => {
 
         UserController.update(req, (affected) => {
             if (affected.n == 0) {
-                // console.log("There is no user who match this email sorry");
                 errors.push({ msg: 'There is no user who match this email sorry' });
                 res.render('updateProfile', {
                     errors,
@@ -219,7 +221,6 @@ router.post('/:email', (req, res) => {
             }
             else {
                 if (affected.nModified == 0) {
-                    // console.log("Sorry there is an issue with the modification");
                     errors.push({ msg: 'Sorry there is an issue with the modification' });
                     res.render('updateProfile', {
                         errors,
@@ -279,15 +280,30 @@ router.delete('/:email', (req, res) => {
 //Here we are getting /Users, because of the app.use at the end of the code
 routerAuth.get('/', UserController.allUsers);
 
+routerAuth.delete('/metrics/:id', (req, res) => {
+
+    sess=req.session;
+    console.log(req.params.id)
+
+    UserController.deleteMetric(sess.email, req.params.id, () => {
+        
+    });
+})
+
 routerAuth.post('/metrics', (req, res) => {
 
     sess = req.session;
     req.body.type = "user"
-    req.body.timestamp = new Date().toDateString()
+    req.body.timestamp = new Date().toUTCString()
+    var test = []
 
-    UserController.newMetrics(sess.email, req, (success) => {
-        console.log(success)
+    UserController.findMetric(sess.email, req.body.id, () => {
+
+        UserController.newMetrics(sess.email, req.body, (success) => {
+
+        })
     })
+    
 })
 
 //Here we are getting /Users/:email because of the app.use at the end of the code
@@ -301,8 +317,7 @@ routerAuth.get('/:email', (req, res) => {
             console.log("Pas trouvé");
         }
         else {
-            console.log("Users : " + users);
-            console.log("username : " + users[0].username);
+
 
             //res.send(users);
 
