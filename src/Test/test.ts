@@ -8,9 +8,8 @@ const url : string = 'mongodb://localhost:27017/WebProjectTest';
 
 //tell mongoose to use es6 implementation of promises
 mongoose.Promise = global.Promise;
-mongoose.set('useNewUrlParser', true);
 
-mongoose.connect('url'); 
+mongoose.connect(url, { useNewUrlParser : true, useUnifiedTopology : true}); 
 mongoose.connection
     .once('open', () => console.log('Connected!'))
     .on('error', (error) => {
