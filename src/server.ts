@@ -8,6 +8,8 @@ const app = express();
 
 var sess; //I know this is not really recommanded to set a global session like this...
 
+const port = process.env.PORT || 8080
+
 const authCheck = function (req: any, res: any, next: any) {
     sess = req.session;
     if (sess.email) {
@@ -124,6 +126,7 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
 
+    console.log(req.body)
     const { username, email, password, password2 } = req.body;
     let errors = [] as any;
 
@@ -154,7 +157,7 @@ router.post('/register', (req, res) => {
         UserController.getUserByMail(req.body.email, (users) => {
             if (users == '') {
                 req.body.metrics = []
-                UserController.addUser(req, (user) => {
+                UserController.addUser(req.body, (user) => {
                     sess = req.session;
                     sess.email = user.email;
                     res.redirect('Users/' + sess.email);
@@ -287,7 +290,7 @@ router.delete('/:email', (req, res) => {
 })
 
 //Here we are getting /Users, because of the app.use at the end of the code
-routerAuth.get('/', UserController.allUsers);
+router.get('/AllUsers', UserController.allUsers);
 
 routerAuth.delete('/metrics/:id', (req, res) => {
 
@@ -357,6 +360,6 @@ app.use('/Users', routerAuth);
 app.use('/', router);
 
 
-app.listen(process.env.PORT || 8080, () => {
-    console.log(`App Started on PORT ${process.env.PORT || 8080}`);
+app.listen(port, () => {
+    console.log(`App Started on PORT ${port}`);
 });

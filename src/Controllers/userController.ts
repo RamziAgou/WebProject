@@ -80,8 +80,8 @@ export let deleteMetric = ( user_email : string, idMetric : string, res: Respons
         })
 }
 
-export let addUser = (req: Request, callback : (user : any) => void) => {
-    let user = new Users(req.body);
+export let addUser = (body: any, callback : (user : any) => void) => {
+    let user = new Users(body);
 
     user.save((err: any) => {
         if(err){
@@ -93,8 +93,8 @@ export let addUser = (req: Request, callback : (user : any) => void) => {
     })
 }
 
-export let deleteUser = (req: Request, callback : () => void ) => {
-    Users.deleteOne({ email: req.params.email }, (err : any) => {
+export let deleteUser = (emailToDelete : string, callback : () => void ) => {
+    Users.deleteOne({ email: emailToDelete }, (err : any) => {
         if(err){
             console.log(err);
         }
