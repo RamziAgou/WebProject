@@ -47,6 +47,10 @@ router.get('/updateProfile', (req, res) => {
 
 router.get('/home', (req, res) => {
 
+    sess = req.session;
+    if (sess.email) {
+        return res.redirect('Users/' + sess.email);
+    }
     res.render("home.ejs");
 });
 
