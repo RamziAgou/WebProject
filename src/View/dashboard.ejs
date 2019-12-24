@@ -2,21 +2,18 @@
 <html lang="en">
 
 <head>
+
     <% include partials/head %>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="/">Home</a>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/"><%= user.email %></a>
-                <a class="nav-item nav-link " href="/logout">Logout</a>
-            </div>
-        </div>
-    </nav>
+
+    <!-- Allows to display the right navBar -->
+    <% var connected = 1 %>
+
+    <% include partials/navBar %>
 
     <script>
 
-        
+
         function onClick() {
             var selectBox = document.getElementById("metrics");
             var selectedValue = selectBox.options[selectBox.selectedIndex].value;
@@ -30,19 +27,23 @@
         }
 
         function onClickUpdate() {
-            
+
         }
 
         //I really don't know why VSCode still saying that it's an error...
-        var usertp = <%- JSON.stringify(user) %>;
+        var usertp = JSON.stringify(user)
         $(document).ready(function () {
             $('#delete').on('click', function () {
 
                 $.ajax({
                     type: "DELETE",
-                    url: '/' + usertp.email,
+                    //     url: '/' + usertp.email,
+                    // }).done(function (msg) {
+                    //     document.location.reload(true)
+                    url: '/<%= user.email %>',
                 }).done(function (msg) {
-                    document.location.reload(true)
+                    alert('Your profile is now deleted, you will be redirected to the login page');
+                    location.reload(true);
                 });
             });
 
@@ -56,7 +57,7 @@
                     {
                         type: "POST",
                         url: '/Users/metrics/' + selectedValue,
-                        dataType : 'json',
+                        dataType: 'json',
                         data: {
                             value: newValue
                         },
@@ -67,66 +68,69 @@
             })
         });
 
-
     </script>
 
 </head>
 
-<body class="container">
+<body>
+    <div class="container">
+        <h1 class="mt-4">User page</h1>
+        <p class="lead mb-3">Welcome <%= user.username %></p>
 
-    <h1 class="mt-4">User page</h1>
-    <p class="lead mb-3">Welcome <%= user.username %></p>
+        <a href="/updateProfile" class="btn btn-primary">Update Profile</a>
 
-    <a href="/updateProfile" class="btn btn-primary">Update Profile</a>
+        <!-- Mettre affichage metrics -->
+        <br><br><br><br>
+        <div>
 
-    <!-- Mettre affichage metrics -->
-    <br><br><br><br>
-    <div>
+            <div class="text-right">
 
-        <div class="text-right">
+                <!-- <a href="/logout" class="btn btn-secondary text-left">Logout</a> -->
 
-            <!-- <a href="/logout" class="btn btn-secondary text-left">Logout</a> -->
+                <!-- change href -->
+                <a class="btn btn-danger" id="delete">Delete your profile</a>
 
-            <!-- change href -->
-            <a class="btn btn-danger" id="delete">Delete your profile</a>
-
+            </div>
         </div>
-    </div>
 
-    <form action="/Users/metrics" method="POST">
-        <div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" id="id" name="id" class="form-control" placeholder="Enter metric's ID" />
-        </div>
-        <div class="form-group">
-            <label for="value">Value</label>
-            <input type="value" id="value" name="value" class="form-control" placeholder="Enter metric's value" />
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">New Metric</button>
-    </form>
 
-    <h2 class="mt-5">Delete Metrics</h2>
-    <select id="metrics">
-        <% for(var i = 0; i < user.metrics.length; i++) { %>
-        <% if(user.metrics[i].type == "user") { %>
-        <option value=<%= user.metrics[i].id %>><%= user.metrics[i].id %></option>
-        <%}%>
+        <form action="/Users/metrics" method="POST">
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" class="form-control" placeholder="Enter metric's ID" />
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input type="value" id="value" name="value" class="form-control" placeholder="Enter metric's value" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">New Metric</button>
+        </form>
+
+        <h2 class="mt-5">Delete Metrics</h2>
+        <select id="metrics">
+            <% for(var i = 0; i < user.metrics.length; i++) { %>
+            <% if(user.metrics[i].type == "user") { %>
+            <option value=<%= user.metrics[i].id %>><%= user.metrics[i].id %></option>
+            <%}%>
         <% } %>
-    </select>
-    <button class="btn btn-primary" onclick="onClick()">Delete the metric</button>
+        </select>
+        <button class="btn btn-primary" onclick="onClick()">Delete the metric</button>
 
-    <h2 class="mt-5">Update Metrics</h2>
-    <select id="metricsUpdate">
-        <% for(var i = 0; i < user.metrics.length; i++) { %>
-        <% if(user.metrics[i].type == "user") { %>
-        <option value=<%= user.metrics[i].id %>><%= user.metrics[i].id %></option>
-        <%}%>
+        <h2 class="mt-5">Update Metrics</h2>
+        <select id="metricsUpdate">
+            <% for(var i = 0; i < user.metrics.length; i++) { %>
+            <% if(user.metrics[i].type == "user") { %>
+            <option value=<%= user.metrics[i].id %>><%= user.metrics[i].id %></option>
+            <%}%>
             <% } %>
-    </select>
-    <label for="value">Value</label>
-    <input type="value" id="valueUpdate" name="value" class="form-control" placeholder="Enter metric's value" />
-    <button class="btn btn-primary" id="update">Update the metric</button>
+        </select>
+        <label for="value">Value</label>
+        <input type="value" id="valueUpdate" name="value" class="form-control" placeholder="Enter metric's value" />
+        <button class="btn btn-primary" id="update">Update the metric</button>
 
+        <br><br><br><br>
+
+    </div>
 </body>
 
 </html>
