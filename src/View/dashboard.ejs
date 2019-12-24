@@ -142,26 +142,24 @@
                 <% return a.timestamp - b.timestamp; %>
             <% }); %>
 
+            <% var dataUser = [] %>
+            <% var labelUser = [] %>
+
             <% console.log("Result :" + result[0].id) %>
 
-           <% var dataUser = [] %>
-           <% var labelUser = [] %>
-           
+            <% console.log("Result graph1 :" + result[0].timestamp) %>
+            
             <% for(var i = 0; i < result.length; i++) { %>
             
-                
                 <% dataUser.push(result[i].value) %>
-                <% labelUser.push(result[i].id + ": " +result[i].timestamp) %>
-
-                <!-- // var date =  new Date(user.metrics[i].timestamp)
-                
-                // labelUser.push(date.toUTCString()) -->
+                <% labelUser.push(result[i].timestamp) %>
                 
                 
             <% } %>
             
+
             <% console.log("Data user :" + dataUser) %>
-            <% console.log("Label user" + labelUser) %>
+            <% console.log("Label user :" + labelUser) %>
         
 
 
@@ -173,18 +171,10 @@
             let conChart = new Chart(myChart, {
                 type: 'bar',
                 data: {
-                    labels: ['Monday', 'Tuesday', 'Wednersday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                    labels: <%- JSON.stringify(labelUser) %> ,
                     datasets: [{
-                        label: 'Number of connection',
-                        data: [
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7
-                        ],
+                        label: 'Connection',
+                        data: <%- JSON.stringify(dataUser) %> ,
                         backgroundColor:'blue'
                         
                     }]
@@ -192,7 +182,7 @@
                 options: {
                     title:{
                         display:true,
-                        text:'Graph: Number of connection per day',
+                        text:'Graph 1: All dates of connection of the user',
                         fontSize:25 
                     },
                     scales: {
@@ -234,10 +224,6 @@
                 
                 <% dataUser.push(result[i].value) %>
                 <% labelUser.push(result[i].id + ": " +result[i].timestamp) %>
-
-                <!-- // var date =  new Date(user.metrics[i].timestamp)
-                
-                // labelUser.push(date.toUTCString()) -->
                 
                 
             <% } %>
