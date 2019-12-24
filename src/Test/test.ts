@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import * as UserController from './Controllers/userController'
-import Users from './user'
+import * as UserController from '../Controllers/userController'
+import Users from '../user'
 
 const mongoose = require('mongoose');
 
