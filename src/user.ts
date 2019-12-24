@@ -1,8 +1,9 @@
 import * as express from 'express'
 import mongoose = require('mongoose');
 
-//const url : string = 'mongodb://mongo:27017/WebProject';
-const url : string = 'mongodb://127.0.0.1:27017/WebProject';
+const url : string = 'mongodb://mongo:27017/WebProject';
+//const url : string = 'mongodb://127.0.0.1:27017/WebProject';
+
 
 mongoose.connect(url, (err : any) => {
     if(err){

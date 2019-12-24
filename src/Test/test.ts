@@ -24,7 +24,7 @@ beforeEach((done) => {
 
 describe('CRUD Users', () => {
     it('Creates a user', (done) =>{
-        let user = { username : "Groui", email : "groui@gmail.com", password: '123456'}
+        let user = { username : "Groui", email : "groui@gmail.com", password: '123456', metrics : []}
         let userDoc = new Users(user)
         UserController.addUser(userDoc, (newUser) => {
             UserController.getUserByMail(newUser.email, (userdb) => {
