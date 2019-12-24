@@ -117,6 +117,7 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
 
+    console.log(req.body)
     const { username, email, password, password2 } = req.body;
     let errors = [] as any;
 
