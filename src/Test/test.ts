@@ -4,7 +4,7 @@ import Users from '../user'
 
 const mongoose = require('mongoose');
 
-const url : string = 'mongodb://localhost:27017/WebProjectTest';
+const url : string = 'mongodb://mongo:27017/WebProjetTest';
 
 //tell mongoose to use es6 implementation of promises
 mongoose.Promise = global.Promise;
@@ -23,7 +23,7 @@ beforeEach((done) => {
 });
 
 describe('CRUD Users', () => {
-    it('Creates a user', (done) =>{
+    it('Create a user', (done) =>{
         let user = { username : "Groui", email : "groui@gmail.com", password: '123456', metrics : []}
         let userDoc = new Users(user)
         UserController.addUser(userDoc, (newUser) => {
@@ -33,6 +33,7 @@ describe('CRUD Users', () => {
                 done()
             })
         })
-    })
+    });
+    
 })
 
