@@ -2,18 +2,14 @@
 <html lang="en">
 
 <head>
+
     <% include partials/head %>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="/">Home</a>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/"><%= user.email %></a>
-                <a class="nav-item nav-link " href="/logout">Logout</a>
-            </div>
-        </div>
-    </nav>
 
+    <!-- Allows to display the right navBar -->
+    <% var connected = 1 %>
+
+    <% include partials/navBar %>
 
     <script>
         $(document).ready(function () {
@@ -21,41 +17,41 @@
 
                 $.ajax({
                     type: "DELETE",
-                    url: '<%= user.email %>',
+                    url: '/<%= user.email %>',
                 }).done(function (msg) {
-                    alert('Your profile is now deleted, you can refreash the page to be redirected to the login page');
+                    alert('Your profile is now deleted, you will be redirected to the login page');
+                    location.reload(true);
                 });
 
                 //here would be the code to send the DELETE request 
             });
         });
 
-
     </script>
 
 </head>
 
-<body class="container">
+<body>
+    <div class="container">
+        <h1 class="mt-4">User page</h1>
+        <p class="lead mb-3">Welcome <%= user.username %></p>
 
-    <h1 class="mt-4">User page</h1>
-    <p class="lead mb-3">Welcome <%= user.username %></p>
+        <a href="/updateProfile" class="btn btn-primary">Update Profile</a>
 
-    <a href="/updateProfile" class="btn btn-primary">Update Profile</a>
+        <!-- Mettre affichage metrics -->
+        <br><br><br><br>
+        <div>
 
-    <!-- Mettre affichage metrics -->
-    <br><br><br><br>
-    <div>
+            <div class="text-right">
 
-        <div class="text-right">
+                <!-- <a href="/logout" class="btn btn-secondary text-left">Logout</a> -->
 
-            <!-- <a href="/logout" class="btn btn-secondary text-left">Logout</a> -->
+                <!-- change href -->
+                <a class="btn btn-danger" id="delete">Delete your profile</a>
 
-            <!-- change href -->
-            <a class="btn btn-danger" id="delete">Delete your profile</a>
-
+            </div>
         </div>
     </div>
-
 
 </body>
 
