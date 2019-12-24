@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -r ts-node/register src/**/test.ts",
+    "test": "./node_modules/.bin/mocha -r ts-node/register src/**/test.ts --exit",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
     "production": "docker-compose -f docker/docker-compose.yml up -d",
     "start": "./node_modules/.bin/ts-node src/server.ts",
