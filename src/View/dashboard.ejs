@@ -31,17 +31,16 @@
         }
 
         //I really don't know why VSCode still saying that it's an error... but it works
-        var usertp = <%- JSON.stringify(user) %>
+        var usertp = <% - JSON.stringify(user) %>
             $(document).ready(function () {
-                console.log("je marche")
                 $('#delete').on('click', function () {
 
                     $.ajax({
                         type: "DELETE",
-                             url: '/' + usertp.email,
+                        //     url: '/' + usertp.email,
                         // }).done(function (msg) {
                         //     document.location.reload(true)
-                        //url: '/'+<%= user.email %>,
+                        url: '/<%= user.email %>',
                     }).done(function (msg) {
                         alert('Your profile is now deleted, you will be redirected to the login page');
                         location.reload(true);
@@ -145,10 +144,6 @@
 
             <% var dataUser = [] %>
             <% var labelUser = [] %>
-
-            <% console.log("Result :" + result[0].id) %>
-
-            <% console.log("Result graph1 :" + result[0].timestamp) %>
             
             <% for(var i = 0; i < result.length; i++) { %>
             
@@ -214,6 +209,7 @@
             <% result.sort(function (a, b) { %>
                 <% return a.timestamp - b.timestamp; %>
             <% }); %>
+
 
            <% var dataUser = [] %>
            <% var labelUser = [] %>

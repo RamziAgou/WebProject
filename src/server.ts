@@ -275,13 +275,13 @@ router.delete('/:email', (req, res) => {
                         if (err) {
                             return console.log(err);
                         }
-                        // res.send("You deleted yourself, you'll now get logout")
-                        res.redirect('/logout');
+                        res.send("You deleted yourself, you'll now get logout")
+                        // res.redirect('/logout');
                     });
                 }
                 else {
-                    // res.send(req.params.email + " get deleted successfully");
-                    res.redirect('/');
+                    res.send(req.params.email + " get deleted successfully");
+                    // res.redirect('/');
                 }
             })
         }
