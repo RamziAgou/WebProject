@@ -145,7 +145,7 @@ router.post('/register', (req, res) => {
         UserController.getUserByMail(req.body.email, (users) => {
             if (users == '') {
                 req.body.metrics = []
-                UserController.addUser(req, (user) => {
+                UserController.addUser(req.body, (user) => {
                     sess = req.session;
                     sess.email = user.email;
                     res.redirect('Users/' + sess.email);

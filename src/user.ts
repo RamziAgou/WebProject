@@ -13,7 +13,7 @@ mongoose.connect(url, (err : any) => {
     }
 })
 
-mongoose.set('debug', true)
+//mongoose.set('debug', true)
 
 
 
