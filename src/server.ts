@@ -160,6 +160,16 @@ router.post('/register', (req, res) => {
                 UserController.addUser(req.body, (user) => {
                     sess = req.session;
                     sess.email = user.email;
+                    var metric = { 
+                        id : "connection",
+                        value : 1,
+                        type : "con",
+                        timestamp : new Date().toUTCString()
+                    }
+                    UserController.newMetrics(sess.email, metric, res, () => {
+                        //console.log(success);
+                    })
+                    
                     res.redirect('Users/' + sess.email);
                 });
             }
