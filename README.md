@@ -42,17 +42,17 @@ So to run our project you must follow theses steps.
 
 RUNNING MODE
 
-*In the project folder, use the command "docker-compose up --build"
-*This command will build the project and create our project image to run it after in a container
-*Where the command is finished, you can go in your "localhost:8080" and the website will be here.
-*Little warning => I used docker Toolbox and localhost was 192.168.99.100 and I could not changed it.
+#### In the project folder, use the command "docker-compose up --build"
+#### This command will build the project and create our project image to run it after in a container
+#### Where the command is finished, you can go in your "localhost:8080" and the website will be here.
+#### Little warning => I used docker Toolbox and localhost was 192.168.99.100 and I could not changed it.
 Hope there is nothing wrong with yours...
 
 TEST MODE
 
-*In the project folder, use the command "docker-compose -f docker-compose.test.yml up --build"
-*This commande will build the project using an other dockerfile, which permit to run "npm run test"
-*You can see the test in your CLI !
+#### In the project folder, use the command "docker-compose -f docker-compose.test.yml up --build"
+#### This commande will build the project using an other dockerfile, which permit to run "npm run test"
+#### You can see the test in your CLI !
 
 ## How to use the routes
 
